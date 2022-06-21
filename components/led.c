@@ -22,3 +22,10 @@ void init_led(led_rgb *led)
     gpio_reset_pin(led -> pin);
     gpio_set_direction(led -> pin, GPIO_MODE_OUTPUT); /* Set the GPIO as a push/pull output */
 }
+
+void toggle_led(led_rgb *led, TickType_t time) {
+    gpio_set_level(led->pin, 1);
+    vTaskDelay(time / portTICK_PERIOD_MS);
+    gpio_set_level(led->pin, 0);
+    vTaskDelay(time / portTICK_PERIOD_MS);
+}

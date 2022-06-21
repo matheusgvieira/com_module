@@ -1,17 +1,14 @@
 #include <stdio.h>
 #include "led.h"
 #include "uart.h"
-#include "buzzer.h"
+//#include "wifi.h"
 
-led_rgb led_2 = {.pin = 2, .tag = "red"};
 
 void app_main(void)
 {
-    init_led(&led_2);
-    set_state_led(&led_2, 1);
+    initializationUart();
 
-    while (1)
-    {
-        run_motor(hall_sensor_value);
-    }
+    xTaskCreate(readByteUart, "readByteUart", 1024*2, NULL, configMAX_PRIORITIES-1, NULL);
+    xTaskCreate(writeByteUart, "writeByteUart", 1024*2, NULL, configMAX_PRIORITIES-2, NULL);
+
 }
