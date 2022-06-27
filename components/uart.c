@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int num = 0;
 
 /*
  * Initialization of uart:
@@ -60,24 +59,26 @@ void readByteUart(void *arg)
     esp_log_level_set(RX_TASK_TAG, ESP_LOG_INFO);
 
     // Dynamically allocate a single large block of memory with the specified size of data received uart
-    uint8_t* data = (uint8_t*) malloc(RX_BUF_SIZE+1);
+    uint8_t* bytes_received_rx = (uint8_t*) malloc(RX_BUF_SIZE);
 
     // Rotine of to read
     while (1) {
         // UART read bytes from UART buffers
-        const int bytes_received_rx = uart_read_bytes(
+        const int len_bytes_received_rx = uart_read_bytes(
                 UART,
-                data,
-                RX_BUF_SIZE,
-                500 / portTICK_PERIOD_MS);
+                bytes_received_rx,
+                (RX_BUF_SIZE - 1),
+                20 / portTICK_PERIOD_MS);
 
         // Check and print value received
-        if (bytes_received_rx > 0) { // The number of bytes read from UART FIFO
-            data[bytes_received_rx] = 0;
-            ESP_LOGI(RX_TASK_TAG, "BYTE_RECEIVED: '%s'", bytes_received_rx, data);
+        if (len_bytes_received_rx) { // The number of bytes read from UART FIFO
+            bytes_received_rx[len_bytes_received_rx] = '\0';
+            if(strcmp((char*)bytes_received_rx, "") != 0) {
+                ESP_LOGI(RX_TASK_TAG, "Recv str: %s", (char *) bytes_received_rx);
+            }
         }
     }
-    free(data);
+    free(bytes_received_rx);
 }
 
 /*
@@ -88,11 +89,11 @@ void writeByteUart(void *arg)
     // Dynamically allocate a single large block of memory with the specified size of data sended uart
     char* bytes_sended_tx = (char*) malloc(100);
 
-    // Rotine for to send
+    // Rotine for to sends
     while (1) {
 
         // sends formatted output to a string pointed to, by bytes_sended_tx.
-        sprintf(bytes_sended_tx, "CMOK");
+        sprintf(bytes_sended_tx, "OK\r\n");
 
         // Send data to the UART port from a given buffer and length,.
         uart_write_bytes(

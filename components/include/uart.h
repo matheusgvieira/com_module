@@ -14,10 +14,10 @@ extern "C" {
 #endif
 
 // Defines
-#define TXD_PIN (GPIO_NUM_17)
-#define RXD_PIN (GPIO_NUM_16)
+#define TXD_PIN (10)
+#define RXD_PIN (9)
 
-#define UART UART_NUM_2
+#define UART UART_NUM_1
 #define RX_BUF_SIZE 1024
 
 // Variables
