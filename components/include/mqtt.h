@@ -8,6 +8,7 @@
 #include "nvs_flash.h"
 #include "wifi.h"
 #include "mqtt_client.h"
+#include "structures.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,7 +20,7 @@ extern "C" {
 // Variables
 
 // Functions
-void mqttPublish(float value, char* topic);
+void mqttPublish(float value, char* topic, data_input *data_in);
 void mqttSubscribe(float value, char* topic);
 void mqttInit(void);
 

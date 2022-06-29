@@ -64,11 +64,12 @@ static void mqtt_app_start(void)
     esp_mqtt_client_start(client);
 }
 
-void mqttPublish(float value, char* topic) {
+void mqttPublish(float value, char* topic, data_input *data_in) {
     char data[50];
     sprintf(data, "%f", value);
     printf("Sending data to broker: %.2f \n", value);
     esp_mqtt_client_publish(client, topic, data, strlen(data), 0, false);
+    data_in -> update = 0;
 }
 
 void mqttSubscribe(float value, char* topic) {

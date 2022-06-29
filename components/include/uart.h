@@ -8,23 +8,24 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include "sdkconfig.h"
+#include "structures.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Defines
-#define TXD_PIN (10)
-#define RXD_PIN (9)
+#define TXD_PIN (GPIO_NUM_17)
+#define RXD_PIN (GPIO_NUM_16)
 
-#define UART UART_NUM_1
+#define UART UART_NUM_2
 #define RX_BUF_SIZE 1024
 
 // Variables
 
 // Functions
 void initializationUart();
-void readByteUart(void *arg);
+char * readByteUart();
 void writeByteUart(void *arg);
 //void echo_task(void *arg);
 

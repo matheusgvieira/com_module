@@ -52,29 +52,27 @@ void initializationUart()
 /*
  * Function for readbyte of UART
  */
-void readByteUart(void *arg)
+char * readByteUart()
 {
-    // Params for default log ESP
-    static const char *RX_TASK_TAG = "COM_MODULE_RX";
+    static const char *RX_TASK_TAG = "UART_RX | ";
     esp_log_level_set(RX_TASK_TAG, ESP_LOG_INFO);
 
-    // Dynamically allocate a single large block of memory with the specified size of data received uart
     uint8_t* bytes_received_rx = (uint8_t*) malloc(RX_BUF_SIZE);
 
-    // Rotine of to read
     while (1) {
-        // UART read bytes from UART buffers
         const int len_bytes_received_rx = uart_read_bytes(
                 UART,
                 bytes_received_rx,
                 (RX_BUF_SIZE - 1),
                 20 / portTICK_PERIOD_MS);
 
-        // Check and print value received
-        if (len_bytes_received_rx) { // The number of bytes read from UART FIFO
+        if (len_bytes_received_rx) {
             bytes_received_rx[len_bytes_received_rx] = '\0';
-            if(strcmp((char*)bytes_received_rx, "") != 0) {
-                ESP_LOGI(RX_TASK_TAG, "Recv str: %s", (char *) bytes_received_rx);
+            char* value_received = (char *) bytes_received_rx;
+
+            if(strcmp(value_received, "") != 0) {
+                ESP_LOGI(RX_TASK_TAG, "Data received: %s", value_received);
+                return value_received;
             }
         }
     }
@@ -102,7 +100,7 @@ void writeByteUart(void *arg)
                 strlen(bytes_sended_tx)
         );
         // Delay of send
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+//        vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 }
 
