@@ -11,7 +11,7 @@
 
 ## Protocols
 
-* SPI
+* UART
 * MQTT
 
 ## Comandos ESP-IDF
@@ -20,12 +20,6 @@
 ```sh
 cd $HOME
 . $HOME/esp/esp-idf/export.sh
-```
-
-2. Define home folder of project and initialization with example
-```sh
-cd ~/$HOME_PROJECT
-cp -r $IDF_PATH/examples/get-started/hello_world .
 ```
 
 3. Set develop board and settings configurations
@@ -49,3 +43,6 @@ idf.py -p PORT flash monitor
 ```sh
 screen /dev/ttyUSB0 115200
 ```
+
+## Dashboard
+![Dashboard](./images/dashboard.png)
