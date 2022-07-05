@@ -6,6 +6,7 @@ static const char *TAG = "wifi station";
 
 static int s_retry_num = 0;
 
+led_rgb led_wifi = {.pin = 26, .color= "blue"};
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                           int32_t event_id, void* event_data)
@@ -82,9 +83,12 @@ void wifi_init_sta(void)
     if (bits & WIFI_CONNECTED_BIT) {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+
+        set_state_led(&led_wifi, 1);
     } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+        set_state_led(&led_wifi, 0);
     } else {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");
     }
@@ -94,6 +98,9 @@ void wifi_init_sta(void)
 
 void wifiInit()
 {
+    //Init led
+    init_led(&led_wifi);
+
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {

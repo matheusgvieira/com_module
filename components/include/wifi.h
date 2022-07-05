@@ -14,6 +14,8 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
+#include "led.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

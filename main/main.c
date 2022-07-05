@@ -5,17 +5,25 @@
 #include "mqtt.h"
 #include "structures.h"
 #include "uart.h"
+#include "led.h"
 
 data_input module = {.read_uart = "", .voltage = 0.0, .current = 0.0, .update = 0};
 
+led_rgb led_main = {.pin = 25, .color= "white"};
+
 void app_main()
 {
+    init_led(&led_main);
+    set_state_led(&led_main, 1);
+
     mqttInit();
     initializationUart();
 
 //    xTaskCreate(&readByteUart, "readByteUart", 2048, &module, 5, NULL);
 
     while(1){
+        mqttPublish(1.0, "tcc/state", &module);
+
         module.read_uart = readByteUart();
         setTypeData(&module);
 
