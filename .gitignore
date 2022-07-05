@@ -1,3 +1,5 @@
 .idea
 ./cmake-build-debug
 ./build
+./node-red/node_modules
+./node-red/.npm
