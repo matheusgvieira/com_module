@@ -59,24 +59,24 @@ char * readByteUart()
 
     uint8_t* bytes_received_rx = (uint8_t*) malloc(RX_BUF_SIZE);
 
-    while (1) {
-        const int len_bytes_received_rx = uart_read_bytes(
-                UART,
-                bytes_received_rx,
-                (RX_BUF_SIZE - 1),
-                20 / portTICK_PERIOD_MS);
+    const int len_bytes_received_rx = uart_read_bytes(
+            UART,
+            bytes_received_rx,
+            (RX_BUF_SIZE - 1),
+            20 / portTICK_PERIOD_MS);
 
-        if (len_bytes_received_rx) {
-            bytes_received_rx[len_bytes_received_rx] = '\0';
-            char* value_received = (char *) bytes_received_rx;
+    if (len_bytes_received_rx) {
+        bytes_received_rx[len_bytes_received_rx] = '\0';
+        char* value_received = (char *) bytes_received_rx;
 
-            if(strcmp(value_received, "") != 0) {
-                ESP_LOGI(RX_TASK_TAG, "Data received: %s", value_received);
-                return value_received;
-            }
+        if(strcmp(value_received, "") != 0) {
+            ESP_LOGI(RX_TASK_TAG, "Data received: %s", value_received);
+            return value_received;
         }
     }
     free(bytes_received_rx);
+
+    return "";
 }
 
 /*

@@ -16,6 +16,8 @@ void app_main()
     init_led(&led_main);
     set_state_led(&led_main, 1);
 
+    get_init_nvs(&module);
+
     mqttInit();
     initializationUart();
 
@@ -25,11 +27,15 @@ void app_main()
         mqttPublish(1.0, "tcc/state", &module);
 
         module.read_uart = readByteUart();
-        setTypeData(&module);
+
+        if (strcmp(module.read_uart, "") != 0) {
+            setTypeData(&module);
+        }
 
         if(module.update) {
             mqttPublish(module.current, "tcc/current", &module);
             mqttPublish(module.voltage, "tcc/voltage", &module);
+            set_init_nvs(&module);
         }
     }
 }
