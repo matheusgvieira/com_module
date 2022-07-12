@@ -2,7 +2,7 @@
 
 static EventGroupHandle_t s_wifi_event_group;
 
-static const char *TAG = "wifi station";
+static const char *TAG = "WIFI-STATION |";
 
 static int s_retry_num = 0;
 
@@ -30,7 +30,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-void wifi_init_sta(void)
+int8_t wifi_init_sta(void)
 {
     s_wifi_event_group = xEventGroupCreate();
 
@@ -59,44 +59,41 @@ void wifi_init_sta(void)
             .sta = {
                     .ssid = EXAMPLE_ESP_WIFI_SSID,
                     .password = EXAMPLE_ESP_WIFI_PASS,
-                    /* Setting a password implies station will connect to all security modes including WEP/WPA.
-                     * However these modes are deprecated and not advisable to be used. Incase your Access point
-                     * doesn't support WPA2, these mode can be enabled by commenting below line */
             },
     };
+
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
 
     ESP_LOGI(TAG, "wifi_init_sta finished.");
 
-    /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
-     * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
     EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
                                            WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
                                            pdFALSE,
                                            pdFALSE,
                                            portMAX_DELAY);
 
-    /* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
-     * happened. */
     if (bits & WIFI_CONNECTED_BIT) {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
-
         set_state_led(&led_wifi, 1);
+        return 1;
     } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
         set_state_led(&led_wifi, 0);
+        return 0;
     } else {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");
     }
+
+    return 0;
 }
 
 
 
-void wifiInit()
+int8_t wifi_init()
 {
     //Init led
     init_led(&led_wifi);
@@ -110,5 +107,5 @@ void wifiInit()
     ESP_ERROR_CHECK(ret);
 
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-    wifi_init_sta();
+    return wifi_init_sta();
 }

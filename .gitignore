@@ -1,5 +1,8 @@
 .idea
-./cmake-build-debug
-./build
-./node-red/node_modules
-./node-red/.npm
+cmake-build-debug
+build/
+node-red/.npm/
+node-red/node_modules/
+tests/*
+.DS_Store
+images/.DS_Store

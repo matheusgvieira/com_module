@@ -146,7 +146,7 @@
         "tab": "238620dae60bea9c",
         "order": 1,
         "disp": true,
-        "width": 8,
+        "width": "8",
         "collapse": false,
         "className": ""
     },
@@ -165,7 +165,7 @@
         "tab": "238620dae60bea9c",
         "order": 2,
         "disp": true,
-        "width": 8,
+        "width": "8",
         "collapse": false,
         "className": ""
     },
@@ -174,7 +174,7 @@
         "type": "ui_group",
         "name": "Seccionamento",
         "tab": "238620dae60bea9c",
-        "order": 3,
+        "order": 4,
         "disp": true,
         "width": "6",
         "collapse": false,
@@ -185,7 +185,29 @@
         "type": "ui_group",
         "name": "Informações",
         "tab": "238620dae60bea9c",
-        "order": 4,
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c6646dc52f36ab78",
+        "type": "ui_group",
+        "name": "Potência",
+        "tab": "238620dae60bea9c",
+        "order": 3,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b622c5bd0f36ee0a",
+        "type": "ui_group",
+        "name": "Energia",
+        "tab": "238620dae60bea9c",
+        "order": 5,
         "disp": true,
         "width": "6",
         "collapse": false,
@@ -243,7 +265,7 @@
         "label": "A",
         "format": "{{value}}",
         "min": 0,
-        "max": "3",
+        "max": "20",
         "colors": [
             "#00b500",
             "#e6e600",
@@ -308,7 +330,7 @@
         "label": "A",
         "format": "{{value}}",
         "min": 0,
-        "max": "800",
+        "max": "1200",
         "colors": [
             "#00b500",
             "#e6e600",
@@ -489,7 +511,7 @@
         "label": "Relê 1",
         "tooltip": "",
         "group": "5d8e936c4cd8a91f",
-        "order": 0,
+        "order": 1,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -497,18 +519,18 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "1",
+        "onvalueType": "num",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "0",
+        "offvalueType": "num",
         "officon": "",
         "offcolor": "",
         "animate": false,
         "className": "",
         "x": 130,
-        "y": 780,
+        "y": 1180,
         "wires": [
             [
                 "24dbd3e45258e347",
@@ -531,7 +553,7 @@
         "expiry": "",
         "broker": "4d1186fb1d1b8376",
         "x": 440,
-        "y": 780,
+        "y": 1180,
         "wires": []
     },
     {
@@ -542,7 +564,7 @@
         "label": "Relê 2",
         "tooltip": "",
         "group": "5d8e936c4cd8a91f",
-        "order": 0,
+        "order": 2,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -550,18 +572,18 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "1",
+        "onvalueType": "num",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "0",
+        "offvalueType": "num",
         "officon": "",
         "offcolor": "",
         "animate": false,
         "className": "",
         "x": 130,
-        "y": 900,
+        "y": 1300,
         "wires": [
             [
                 "ec066ab0a57f29c1",
@@ -584,7 +606,7 @@
         "expiry": "",
         "broker": "4d1186fb1d1b8376",
         "x": 440,
-        "y": 900,
+        "y": 1300,
         "wires": []
     },
     {
@@ -601,7 +623,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 440,
-        "y": 740,
+        "y": 1140,
         "wires": []
     },
     {
@@ -618,7 +640,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 440,
-        "y": 860,
+        "y": 1260,
         "wires": []
     },
     {
@@ -647,10 +669,10 @@
         "id": "eca1e14c53aa9109",
         "type": "ui_led",
         "z": "c1f60fab791847d7",
-        "order": 2,
+        "order": 1,
         "group": "cef6e9c9d635b7dc",
-        "width": "6",
-        "height": "2",
+        "width": 6,
+        "height": 2,
         "label": "Estado",
         "labelPlacement": "left",
         "labelAlignment": "left",
@@ -679,7 +701,7 @@
         "type": "debug",
         "z": "c1f60fab791847d7",
         "name": "State",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -718,8 +740,252 @@
         "name": "Seccionamento",
         "info": "",
         "x": 160,
-        "y": 680,
+        "y": 1080,
         "wires": []
+    },
+    {
+        "id": "24727a5a2b9a60d7",
+        "type": "mqtt in",
+        "z": "c1f60fab791847d7",
+        "name": "",
+        "topic": "tcc/power",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "4d1186fb1d1b8376",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 760,
+        "wires": [
+            [
+                "72b5893d50a84146"
+            ]
+        ]
+    },
+    {
+        "id": "fdab613a06ba7ac4",
+        "type": "debug",
+        "z": "c1f60fab791847d7",
+        "name": "Potencia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "4ae6c020e15b4b7c",
+        "type": "ui_gauge",
+        "z": "c1f60fab791847d7",
+        "name": "",
+        "group": "c6646dc52f36ab78",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "",
+        "label": "W",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "20",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 710,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "901e20ce8f0abedf",
+        "type": "mqtt in",
+        "z": "c1f60fab791847d7",
+        "name": "",
+        "topic": "tcc/energy",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "4d1186fb1d1b8376",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 960,
+        "wires": [
+            [
+                "517f4814509bb1d2"
+            ]
+        ]
+    },
+    {
+        "id": "17b29ae47b03d4b5",
+        "type": "debug",
+        "z": "c1f60fab791847d7",
+        "name": "Energia",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "517f4814509bb1d2",
+        "type": "simplejs",
+        "z": "c1f60fab791847d7",
+        "func": "parse-float",
+        "property": "payload",
+        "name": "toFloat",
+        "x": 320,
+        "y": 960,
+        "wires": [
+            [
+                "e084cbd31d46f1fb"
+            ]
+        ]
+    },
+    {
+        "id": "e084cbd31d46f1fb",
+        "type": "function",
+        "z": "c1f60fab791847d7",
+        "name": "round",
+        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 960,
+        "wires": [
+            [
+                "17b29ae47b03d4b5",
+                "be97c0b5fd2e74c7"
+            ]
+        ]
+    },
+    {
+        "id": "bc28917e95fab6ad",
+        "type": "function",
+        "z": "c1f60fab791847d7",
+        "name": "round",
+        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 760,
+        "wires": [
+            [
+                "4ae6c020e15b4b7c",
+                "fdab613a06ba7ac4",
+                "3f832eca3fdd44ae"
+            ]
+        ]
+    },
+    {
+        "id": "72b5893d50a84146",
+        "type": "simplejs",
+        "z": "c1f60fab791847d7",
+        "func": "parse-float",
+        "property": "payload",
+        "name": "toFloat",
+        "x": 360,
+        "y": 760,
+        "wires": [
+            [
+                "bc28917e95fab6ad"
+            ]
+        ]
+    },
+    {
+        "id": "3f832eca3fdd44ae",
+        "type": "ui_chart",
+        "z": "c1f60fab791847d7",
+        "name": "",
+        "group": "c6646dc52f36ab78",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "P x t",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "dd HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "5",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be97c0b5fd2e74c7",
+        "type": "ui_numeric",
+        "z": "c1f60fab791847d7",
+        "name": "",
+        "label": "Energia",
+        "tooltip": "",
+        "group": "b622c5bd0f36ee0a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}} kWh",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "x": 700,
+        "y": 960,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "7e576cbd32ebed5e",

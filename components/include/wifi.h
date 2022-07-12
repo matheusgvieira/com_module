@@ -25,6 +25,7 @@ extern "C" {
 #define PASSWORD "bily6523"
 
 #define EXAMPLE_ESP_WIFI_SSID      "FIXTELL_TERRIO"
+//#define EXAMPLE_ESP_WIFI_SSID      "Fixtell_Wi-fi_FamiliaDeDeus"
 #define EXAMPLE_ESP_WIFI_PASS      "bily6523"
 #define EXAMPLE_ESP_MAXIMUM_RETRY  5
 
@@ -37,7 +38,7 @@ extern TaskHandle_t taskHandle;
 extern const uint32_t WIFI_CONNEECTED;
 
 // Functions
-void wifiInit();
+int8_t wifi_init();
 
 
 #ifdef __cplusplus

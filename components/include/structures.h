@@ -22,10 +22,20 @@ typedef struct {
 
     float current;
     float voltage;
+    float power;
+    float energy;
+
+   char * topic_current;
+   char * topic_voltage;
+   char * topic_power;
+   char * topic_energy;
+
+    int8_t relay1;
+    int8_t relay2;
 
     int8_t update;
 
-} data_input;
+} com_module;
 
 typedef struct
 {
@@ -33,11 +43,15 @@ typedef struct
     char *value;
 } split;
 
+// Queue
+QueueHandle_t moduleQueue;
+
 
 // Functions
-void setTypeData(data_input *data);
-void get_init_nvs(data_input *data);
-void set_init_nvs(data_input *data);
+void setTypeData(com_module *data);
+void get_init_nvs(com_module *data);
+void set_init_nvs(com_module *data);
+void split_tag_value(char *tag_value, split *tag_value_splited);
 
 #ifdef __cplusplus
 }

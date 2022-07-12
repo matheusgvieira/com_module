@@ -24,8 +24,8 @@ extern "C" {
 // Variables
 
 // Functions
-void initializationUart();
-char * readByteUart();
+void initialization_uart(void);
+void read_byte_uart(void *pvParameters);
 void writeByteUart(void *arg);
 //void echo_task(void *arg);
 

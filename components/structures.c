@@ -4,12 +4,12 @@
 
 #include "structures.h"
 
-static void split_tag_value(char *tag_value, split *tag_value_splited) {
+void split_tag_value(char *tag_value, split *tag_value_splited) {
     tag_value_splited->tag = strtok(tag_value, "-");
     tag_value_splited->value = strtok(NULL, "-");
 }
 
-void setTypeData(data_input *module) {
+void setTypeData(com_module *module) {
     split tag_value_splited = {.tag = "", .value = ""};
     float voltage = 0.0, current = 0.0;
 
@@ -33,7 +33,7 @@ void setTypeData(data_input *module) {
     }
 };
 
-void get_init_nvs(data_input *data) {
+void get_init_nvs(com_module *data) {
     // Initialize NVS
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -94,7 +94,7 @@ void get_init_nvs(data_input *data) {
         nvs_close(my_handle);
     }
 }
-void set_init_nvs(data_input *data){
+void set_init_nvs(com_module *data){
     esp_err_t err = nvs_flash_init();
     nvs_handle_t my_handle;
     err = nvs_open("storage", NVS_READWRITE, &my_handle);
