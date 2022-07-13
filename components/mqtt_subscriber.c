@@ -110,6 +110,8 @@ void mqtt_subscriber_task(void *pvParameters)
                 ESP_LOGI(TAG, "DATA=[%d]\n", message.payload_received);
 
                 set_state_led(&led_clean_blue, message.payload_received);
+
+                writeByteUart(0, message.payload_received);
             };
         }
     }

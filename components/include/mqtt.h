@@ -10,6 +10,7 @@
 #include "mqtt_client.h"
 #include "structures.h"
 #include "led.h"
+#include "uart.h"
 
 #ifdef __cplusplus
 extern "C" {

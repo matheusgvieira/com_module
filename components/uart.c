@@ -141,25 +141,25 @@ void read_byte_uart(void *pvParameters)
 /*
  * Function for send CMOK
  */
-void writeByteUart(void *arg)
+void writeByteUart(int8_t select_relay, int8_t value)
 {
     // Dynamically allocate a single large block of memory with the specified size of data sended uart
     char* bytes_sended_tx = (char*) malloc(100);
 
-    // Rotine for to sends
-    while (1) {
-
-        // sends formatted output to a string pointed to, by bytes_sended_tx.
-        sprintf(bytes_sended_tx, "OK\r\n");
-
-        // Send data to the UART port from a given buffer and length,.
-        uart_write_bytes(
-                UART,
-                bytes_sended_tx,
-                strlen(bytes_sended_tx)
-        );
-        // Delay of send
-//        vTaskDelay(2000 / portTICK_PERIOD_MS);
+    // sends formatted output to a string pointed to, by bytes_sended_tx.
+    if (select_relay == 0) {
+        sprintf(bytes_sended_tx, "r0%d\r\n", value);
     }
+
+    if (select_relay == 1) {
+        sprintf(bytes_sended_tx, "r%d0\r\n", value);
+    }
+
+    // Send data to the UART port from a given buffer and length,.
+    uart_write_bytes(
+            UART,
+            bytes_sended_tx,
+            strlen(bytes_sended_tx)
+    );
 }
 

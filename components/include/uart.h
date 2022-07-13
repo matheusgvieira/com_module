@@ -26,7 +26,7 @@ extern "C" {
 // Functions
 void initialization_uart(void);
 void read_byte_uart(void *pvParameters);
-void writeByteUart(void *arg);
+void writeByteUart(int8_t select_relay, int8_t value);
 //void echo_task(void *arg);
 
 
