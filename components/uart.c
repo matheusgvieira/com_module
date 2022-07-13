@@ -12,7 +12,7 @@
  * */
 
 // Queue
-QueueHandle_t moduleQueue = xQueueCreate( 2, sizeof(com_module *) );
+extern QueueHandle_t module_queue;
 
 
 static void split_type_data(com_module *module) {
@@ -62,8 +62,6 @@ static void split_type_data(com_module *module) {
              module -> power,
              module -> energy,
              module -> update);
-
-    xQueueSend( moduleQueue, &module, ( TickType_t ) 0 ) == pdTRUE;
 };
 
 void initialization_uart(void)
@@ -131,6 +129,8 @@ void read_byte_uart(void *pvParameters)
                 ESP_LOGI(RX_TASK_TAG, "Data received: %s", value_received);
                 module.read_uart = value_received;
                 split_type_data(&module);
+
+                xQueueSend( module_queue, (void *)&module, 10 );
             }
         }
     }

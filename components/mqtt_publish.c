@@ -17,6 +17,8 @@ static const char *TAG = "PUB";
 
 static EventGroupHandle_t s_mqtt_event_group;
 
+extern QueueHandle_t module_queue;
+
 static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 {
     switch (event->event_id) {
@@ -123,43 +125,47 @@ void mqtt_publish_module_task(void *pvParameters)
 
 //        ESP_LOGI(TAG, "EventBits=%x", EventBits);
 
-        if (EventBits & MQTT_CONNECTED_BIT) {
-            xQueueReceive(moduleQueue, &( module ), ( TickType_t ) 0 );
+        if (xQueueReceive(module_queue, (void *)&( module ), ( TickType_t ) 0 ) == pdTRUE) {
+            if (EventBits & MQTT_CONNECTED_BIT) {
 
-            ESP_LOGI(TAG, "update=[%d]\n", module.update);
-            if (module.update) {
-                ESP_LOGI(TAG, "topic=[%s]\n", module.topic_current);
-                ESP_LOGI(TAG, "current=[%.2f]\n", module.current);
+                ESP_LOGI(TAG, "update=[%d]\n", module.update);
 
-                ESP_LOGI(TAG, "topic=[%s]\n", module.topic_voltage);
-                ESP_LOGI(TAG, "voltage=[%.2f]\n", module.voltage);
+                if (module.update) {
+                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_current);
+                    ESP_LOGI(TAG, "current=[%.2f]\n", module.current);
 
-                ESP_LOGI(TAG, "topic=[%s]\n", module.topic_power);
-                ESP_LOGI(TAG, "power=[%.2f]\n", module.power);
+                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_voltage);
+                    ESP_LOGI(TAG, "voltage=[%.2f]\n", module.voltage);
 
-                ESP_LOGI(TAG, "topic=[%s]\n", module.topic_energy);
-                ESP_LOGI(TAG, "energy=[%.2f]\n", module.energy);
+                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_power);
+                    ESP_LOGI(TAG, "power=[%.2f]\n", module.power);
 
-                char payload[50];
+                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_energy);
+                    ESP_LOGI(TAG, "energy=[%.2f]\n", module.energy);
 
-                sprintf(payload, "%f", module.current);
-                esp_mqtt_client_publish(mqtt_client, module.topic_current, payload, strlen(payload), 0, 0);
+                    char payload[50];
 
-                sprintf(payload, "%f", module.voltage);
-                esp_mqtt_client_publish(mqtt_client, module.topic_voltage, payload, strlen(payload), 0, 0);
+                    sprintf(payload, "%f", module.current);
+                    esp_mqtt_client_publish(mqtt_client, module.topic_current, payload, strlen(payload), 0, 0);
 
-                sprintf(payload, "%f", module.power);
-                esp_mqtt_client_publish(mqtt_client, module.topic_power, payload, strlen(payload), 0, 0);
+                    sprintf(payload, "%f", module.voltage);
+                    esp_mqtt_client_publish(mqtt_client, module.topic_voltage, payload, strlen(payload), 0, 0);
 
-                sprintf(payload, "%f", module.energy);
-                esp_mqtt_client_publish(mqtt_client, module.topic_energy, payload, strlen(payload), 0, 0);
+                    sprintf(payload, "%f", module.power);
+                    esp_mqtt_client_publish(mqtt_client, module.topic_power, payload, strlen(payload), 0, 0);
 
-                set_init_nvs(&module);
-                module.update = 0;
+                    sprintf(payload, "%f", module.energy);
+                    esp_mqtt_client_publish(mqtt_client, module.topic_energy, payload, strlen(payload), 0, 0);
+
+                    set_init_nvs(&module);
+                    module.update = 0;
+                }
+            } else {
+                ESP_LOGE(TAG, "mqtt broker not connect");
             }
-        } else {
-            ESP_LOGE(TAG, "mqtt broker not connect");
         }
+
+
     }
 
     ESP_LOGI(TAG, "Task Delete");

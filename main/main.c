@@ -30,6 +30,9 @@ mqtt_message_t mqtt_message_relay1 = {.topic = "tcc/rele1", .pin_relay = 33};
 
 mqtt_message_t mqtt_message_relay2 = {.topic = "tcc/rele2", .pin_relay = 32};
 
+static const int module_queue_len = 5;   // Size of delay_queue
+QueueHandle_t module_queue;
+
 
 void app_main()
 {
@@ -40,6 +43,8 @@ void app_main()
     get_init_nvs(&module);
 
     initialization_uart();
+
+    module_queue = xQueueCreate(module_queue_len, sizeof (com_module));
 
     int8_t is_connect_wifi = wifi_init();
 

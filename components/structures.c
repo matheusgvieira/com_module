@@ -111,11 +111,28 @@ void set_init_nvs(com_module *data){
         printf((err != ESP_OK) ? "Voltage no update nvs!\n" : "Voltage update nvs.\n");
 
         // Write current
+        printf("Updating current in NVS ... ");
         char current[50];
         sprintf(current, "%f", data->current);
         err = nvs_set_str(my_handle, "current", current);
 
         printf((err != ESP_OK) ? "Current no update nvs!\n" : "Current update nvs.\n");
+
+        // Write power
+        printf("Updating power in NVS ... ");
+        char power[50];
+        sprintf(power, "%f", data->power);
+        err = nvs_set_str(my_handle, "power", power);
+
+        printf((err != ESP_OK) ? "Power no update nvs!\n" : "Power update nvs.\n");
+
+        // Write energy
+        printf("Updating energy in NVS ... ");
+        char energy[50];
+        sprintf(energy, "%f", data->energy);
+        err = nvs_set_str(my_handle, "energy", energy);
+
+        printf((err != ESP_OK) ? "Energy no update nvs!\n" : "Energy update nvs.\n");
 
         printf("Committing updates in NVS ... ");
         err = nvs_commit(my_handle);

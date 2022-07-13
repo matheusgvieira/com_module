@@ -43,10 +43,6 @@ typedef struct
     char *value;
 } split;
 
-// Queue
-QueueHandle_t moduleQueue;
-
-
 // Functions
 void setTypeData(com_module *data);
 void get_init_nvs(com_module *data);
