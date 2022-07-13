@@ -12,20 +12,10 @@
 #include "driver/twai.h"
 
 #include "mqtt.h"
-#include "led.h"
 
-static const char *TAG = "SUB";
+static const char *TAG = "PUB_STATE";
 
 static EventGroupHandle_t s_mqtt_event_group;
-
-#define MQTT_CONNECTED_BIT BIT0
-
-extern QueueHandle_t xQueue_mqtt_tx;
-extern QueueHandle_t xQueue_mqtt_rx;
-
-static QueueHandle_t xQueueSubscribe;
-
-led_rgb led_clean_blue;
 
 static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 {
@@ -33,7 +23,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
             xEventGroupSetBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
-            //esp_mqtt_client_subscribe(mqtt_client, CONFIG_SUB_TOPIC, 0);
             break;
         case MQTT_EVENT_DISCONNECTED:
             ESP_LOGW(TAG, "MQTT_EVENT_DISCONNECTED");
@@ -50,14 +39,6 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
             break;
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-
-            mqtt_message_t message;
-
-            message.topic = event->topic;
-            message.payload_received = atoi(event->data);
-
-            xQueueSend(xQueueSubscribe, (void *)&message, 0);
-
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -69,16 +50,9 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
     return ESP_OK;
 }
 
-void mqtt_subscriber_task(void *pvParameters)
+void mqtt_publish_state_task(void *pvParameters)
 {
-    mqtt_message_t message = *(mqtt_message_t *) pvParameters;
-
-    led_clean_blue.pin = message.pin_relay;
-    led_clean_blue.color= "blue";
-
-    init_led(&led_clean_blue);
-
-    ESP_LOGI(TAG, "Start Subscribe Broker:%s", CONFIG_BROKER_URL);
+    ESP_LOGI(TAG, "Start Publish Broker:%s", CONFIG_BROKER_URL);
 
     const esp_mqtt_client_config_t mqtt_cfg = {
             .uri = CONFIG_BROKER_URL,
@@ -94,27 +68,30 @@ void mqtt_subscriber_task(void *pvParameters)
     xEventGroupWaitBits(s_mqtt_event_group, MQTT_CONNECTED_BIT, false, true, portMAX_DELAY);
     ESP_LOGI(TAG, "Connect to MQTT Server");
 
-    xQueueSubscribe = xQueueCreate( 10, sizeof(mqtt_message_t) );
+    mqtt_message_t message = *(mqtt_message_t *) pvParameters;
 
-    if( xQueueSubscribe != NULL )
-    {
-        // Subscribe topic
-        esp_mqtt_client_subscribe(mqtt_client, message.topic, 0);
+    while (1) {
+        ESP_LOGI(TAG, "topic=[%s]\n", message.topic);
+        ESP_LOGI(TAG, "data=[%.2f]\n", message.payload);
 
-        while (1) {
-            ESP_LOGI(TAG, "Wait for %s\n", message.topic);
+        EventBits_t EventBits = xEventGroupGetBits(s_mqtt_event_group);
 
-            if (xQueueReceive(xQueueSubscribe, (void *)&message, portMAX_DELAY) == pdTRUE) {
-                ESP_LOGI(TAG, "TOPIC=[%s]\n", message.topic);
+        ESP_LOGI(TAG, "EventBits=%x", EventBits);
 
-                ESP_LOGI(TAG, "DATA=[%d]\n", message.payload_received);
+        if (EventBits & MQTT_CONNECTED_BIT) {
+            char payload[50];
+            sprintf(payload, "%f", message.payload);
+            esp_mqtt_client_publish(mqtt_client, message.topic, payload, strlen(payload), 0, 0);
+        } else {
+            ESP_LOGE(TAG, "mqtt broker not connect");
+        }
 
-                set_state_led(&led_clean_blue, message.payload_received);
-            };
+        if(strcmp(message.tag, "current_state") == 0) {
+            vTaskDelay( 10000 / portTICK_PERIOD_MS);
         }
     }
 
-    // Never reach here
     ESP_LOGI(TAG, "Task Delete");
+    esp_mqtt_client_stop(mqtt_client);
     vTaskDelete(NULL);
 }

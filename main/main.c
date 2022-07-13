@@ -33,6 +33,8 @@ mqtt_message_t mqtt_message_relay2 = {.topic = "tcc/rele2", .pin_relay = 32};
 static const int module_queue_len = 5;   // Size of delay_queue
 QueueHandle_t module_queue;
 
+SemaphoreHandle_t xSemaphore = NULL;
+
 
 void app_main()
 {
@@ -50,6 +52,14 @@ void app_main()
 
     if (is_connect_wifi) {
 
+        xTaskCreate(mqtt_publish_state_task,
+                    "publish_current_state",
+                    1024*4,
+                    &mqtt_message_state_module,
+                    2,
+                    NULL
+        );
+
         xTaskCreate(mqtt_subscriber_task,
                     "subscriber_rele1_state",
                     1024*4,
@@ -58,7 +68,7 @@ void app_main()
                     NULL
         );
 
-        xTaskCreate(mqtt_subscriber_task,
+        xTaskCreate(mqtt_subscriber_rele2_task,
                     "subscriber_rele2_state",
                     1024*4,
                     &mqtt_message_relay2,
@@ -66,13 +76,6 @@ void app_main()
                     NULL
         );
 
-        xTaskCreate(mqtt_publish_task,
-                    "publish_current_state",
-                    1024*4,
-                    &mqtt_message_state_module,
-                    2,
-                    NULL
-                    );
 
         xTaskCreate(read_byte_uart,
                     "read_byte_uart",

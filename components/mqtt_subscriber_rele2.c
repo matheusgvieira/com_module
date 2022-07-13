@@ -25,7 +25,7 @@ extern QueueHandle_t xQueue_mqtt_rx;
 
 static QueueHandle_t xQueueSubscribe;
 
-led_rgb led_clean_blue;
+led_rgb relay2;
 
 static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
 {
@@ -69,14 +69,14 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
     return ESP_OK;
 }
 
-void mqtt_subscriber_task(void *pvParameters)
+void mqtt_subscriber_rele2_task(void *pvParameters)
 {
     mqtt_message_t message = *(mqtt_message_t *) pvParameters;
 
-    led_clean_blue.pin = message.pin_relay;
-    led_clean_blue.color= "blue";
+    relay2.pin = message.pin_relay;
+    relay2.color= "blue";
 
-    init_led(&led_clean_blue);
+    init_led(&relay2);
 
     ESP_LOGI(TAG, "Start Subscribe Broker:%s", CONFIG_BROKER_URL);
 
@@ -109,7 +109,7 @@ void mqtt_subscriber_task(void *pvParameters)
 
                 ESP_LOGI(TAG, "DATA=[%d]\n", message.payload_received);
 
-                set_state_led(&led_clean_blue, message.payload_received);
+                set_state_led(&relay2, message.payload_received);
             };
         }
     }

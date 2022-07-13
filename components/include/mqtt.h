@@ -35,7 +35,8 @@ typedef struct {
 // Functions
 void mqtt_init(void);
 void mqtt_subscriber_task(void *pvParameters);
-void mqtt_publish_task(void *pvParameters);
+void mqtt_subscriber_rele2_task(void *pvParameters);
+void mqtt_publish_state_task(void *pvParameters);
 void mqtt_publish_module_task(void *pvParameters);
 
 #ifdef __cplusplus
