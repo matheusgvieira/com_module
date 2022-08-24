@@ -77,8 +77,6 @@ void mqtt_publish_module_task(void *pvParameters)
 
         EventBits_t EventBits = xEventGroupGetBits(s_mqtt_event_group);
 
-//        ESP_LOGI(TAG, "EventBits=%x", EventBits);
-
         if (xQueueReceive(module_queue, (void *)&( module ), ( TickType_t ) 0 ) == pdTRUE) {
             if (EventBits & MQTT_CONNECTED_BIT) {
 

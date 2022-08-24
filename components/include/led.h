@@ -20,6 +20,7 @@ typedef struct {
 void init_led(led_rgb *led);
 void set_state_led(led_rgb *led, uint8_t state);
 void toggle_led(led_rgb *led, TickType_t time);
+void toggle_led_task(void *pvParameters);
 
 #ifdef __cplusplus
 }

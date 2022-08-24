@@ -29,3 +29,14 @@ void toggle_led(led_rgb *led, TickType_t time) {
     gpio_set_level(led->pin, 0);
     vTaskDelay(time / portTICK_PERIOD_MS);
 }
+
+void toggle_led_task(void *pvParameters) {
+    led_rgb led = *(led_rgb *) pvParameters;
+
+    while(1) {
+        gpio_set_level(led.pin, 1);
+        vTaskDelay(led.time / portTICK_PERIOD_MS);
+        gpio_set_level(led.pin, 0);
+        vTaskDelay(led.time / portTICK_PERIOD_MS);
+    }
+}

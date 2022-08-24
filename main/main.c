@@ -8,6 +8,12 @@
 #include "uart.h"
 #include "led.h"
 #include "wifi.h"
+#include "button.h"
+#include "driver/gpio.h"
+
+const char* TAG = "STRBIOT";
+
+buttons button_reset_wifi = {.pin = 32, .state = 1};
 
 com_module module = { .read_uart = "",
                       .voltage = 0.0,
@@ -30,15 +36,18 @@ mqtt_message_t mqtt_message_relay1 = {.topic = "tcc/rele1", .pin_relay = 33};
 
 mqtt_message_t mqtt_message_relay2 = {.topic = "tcc/rele2", .pin_relay = 32};
 
-static const int module_queue_len = 5;   // Size of delay_queue
+static const int module_queue_len = 5;
+
 QueueHandle_t module_queue;
 
 SemaphoreHandle_t xSemaphore = NULL;
 
+wifi_credentials credentials = {.ssid = "", .password = ""};
 
 void app_main()
 {
     init_led(&led_main);
+    init_button(&button_reset_wifi);
 
     set_state_led(&led_main, 1);
 
@@ -48,51 +57,56 @@ void app_main()
 
     module_queue = xQueueCreate(module_queue_len, sizeof (com_module));
 
-    int8_t is_connect_wifi = wifi_init();
+    get_wifi_credentials(&credentials);
 
-    if (is_connect_wifi) {
+    ESP_LOGI(TAG, "ssid = %s\n", credentials.ssid);
+    ESP_LOGI(TAG, "password = %s\n", credentials.password);
 
-        xTaskCreate(mqtt_publish_state_task,
-                    "publish_current_state",
-                    1024*4,
-                    &mqtt_message_state_module,
-                    2,
-                    NULL
-        );
+    if (check_credentials(&credentials)) {
+        setup_wifi();
+    } else {
+        if (wifi_connect_sta(&credentials)) {
 
-        xTaskCreate(mqtt_subscriber_task,
-                    "subscriber_rele1_state",
-                    1024*4,
-                    &mqtt_message_relay1,
-                    2,
-                    NULL
-        );
+            xTaskCreate(mqtt_publish_state_task,
+                        "publish_current_state",
+                        1024*4,
+                        &mqtt_message_state_module,
+                        2,
+                        NULL
+            );
 
-        xTaskCreate(mqtt_subscriber_rele2_task,
-                    "subscriber_rele2_state",
-                    1024*4,
-                    &mqtt_message_relay2,
-                    2,
-                    NULL
-        );
+            xTaskCreate(mqtt_subscriber_task,
+                        "subscriber_rele1_state",
+                        1024*4,
+                        &mqtt_message_relay1,
+                        2,
+                        NULL
+            );
 
-
-        xTaskCreate(read_byte_uart,
-                    "read_byte_uart",
-                    1024*4,
-                    &module,
-                    2,
-                    NULL
-        );
-
-        xTaskCreate(mqtt_publish_module_task,
-                    "publish_values_got",
-                    1024*4,
-                    &module,
-                    2,
-                    NULL
-        );
+            xTaskCreate(mqtt_subscriber_rele2_task,
+                        "subscriber_rele2_state",
+                        1024*4,
+                        &mqtt_message_relay2,
+                        2,
+                        NULL
+            );
 
 
+            xTaskCreate(read_byte_uart,
+                        "read_byte_uart",
+                        1024*4,
+                        &module,
+                        2,
+                        NULL
+            );
+
+            xTaskCreate(mqtt_publish_module_task,
+                        "publish_values_got",
+                        1024*4,
+                        &module,
+                        2,
+                        NULL
+            );
+        }
     }
 }

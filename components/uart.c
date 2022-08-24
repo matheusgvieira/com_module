@@ -126,7 +126,7 @@ void read_byte_uart(void *pvParameters)
             char* value_received = (char *) bytes_received_rx;
 
             if(strcmp(value_received, "") != 0) {
-                ESP_LOGI(RX_TASK_TAG, "Data received: %s", value_received);
+                ESP_LOGI(RX_TASK_TAG, "Data received: %s\n", value_received);
                 module.read_uart = value_received;
                 split_type_data(&module);
 

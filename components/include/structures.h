@@ -44,7 +44,6 @@ typedef struct
 } split;
 
 // Functions
-void setTypeData(com_module *data);
 void get_init_nvs(com_module *data);
 void set_init_nvs(com_module *data);
 void split_tag_value(char *tag_value, split *tag_value_splited);
