@@ -19,56 +19,56 @@ static EventGroupHandle_t s_mqtt_event_group;
 
 extern QueueHandle_t module_queue;
 
-static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
+static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
-    switch (event->event_id) {
+    esp_mqtt_event_handle_t event = event_data;
+    switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
-            ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
+            printf("MQTT_EVENT_CONNECTED");
             xEventGroupSetBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_DISCONNECTED:
-            ESP_LOGW(TAG, "MQTT_EVENT_DISCONNECTED");
+            printf("MQTT_EVENT_DISCONNECTED");
             xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_SUBSCRIBED:
-            ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
-            ESP_LOGI(TAG, "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
             break;
         case MQTT_EVENT_PUBLISHED:
-            ESP_LOGI(TAG, "MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
             break;
         case MQTT_EVENT_DATA:
-            ESP_LOGI(TAG, "MQTT_EVENT_DATA");
+            printf("MQTT_EVENT_DATA");
             break;
         case MQTT_EVENT_ERROR:
-            ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
+            printf("MQTT_EVENT_ERROR");
             break;
         default:
-            ESP_LOGI(TAG, "Other event id:%d", event->event_id);
+            printf("Other event id:%d", event->event_id);
             break;
     }
-    return ESP_OK;
 }
 
 void mqtt_publish_module_task(void *pvParameters)
 {
-    ESP_LOGI(TAG, "Start Publish Broker:%s", CONFIG_BROKER_URL);
+    printf("Start Publish Broker:%s", CONFIG_BROKER_URL);
 
     const esp_mqtt_client_config_t mqtt_cfg = {
-            .uri = CONFIG_BROKER_URL,
-            .event_handle = mqtt_event_handler,
-            .username = "Token #2",
-            .password = "a6fbba72-067c-4309-be80-ac15ec1c1aa7"
+            .broker.address.uri = CONFIG_BROKER_URL,
+            .credentials.username = "Token #2",
+            .credentials.authentication.password = "a6fbba72-067c-4309-be80-ac15ec1c1aa7",
     };
 
     s_mqtt_event_group = xEventGroupCreate();
     esp_mqtt_client_handle_t mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
+    esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, mqtt_event_handler, mqtt_client);
     xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
     esp_mqtt_client_start(mqtt_client);
     xEventGroupWaitBits(s_mqtt_event_group, MQTT_CONNECTED_BIT, false, true, portMAX_DELAY);
-    ESP_LOGI(TAG, "Connect to MQTT Server");
+    printf("Connect to MQTT Server");
 
     com_module module;
 
@@ -80,20 +80,20 @@ void mqtt_publish_module_task(void *pvParameters)
         if (xQueueReceive(module_queue, (void *)&( module ), ( TickType_t ) 0 ) == pdTRUE) {
             if (EventBits & MQTT_CONNECTED_BIT) {
 
-                ESP_LOGI(TAG, "update=[%d]\n", module.update);
+                printf("update=[%d]\n", module.update);
 
                 if (module.update) {
-                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_current);
-                    ESP_LOGI(TAG, "current=[%.2f]\n", module.current);
+                    printf("topic=[%s]\n", module.topic_current);
+                    printf("current=[%.2f]\n", module.current);
 
-                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_voltage);
-                    ESP_LOGI(TAG, "voltage=[%.2f]\n", module.voltage);
+                    printf("topic=[%s]\n", module.topic_voltage);
+                    printf("voltage=[%.2f]\n", module.voltage);
 
-                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_power);
-                    ESP_LOGI(TAG, "power=[%.2f]\n", module.power);
+                    printf("topic=[%s]\n", module.topic_power);
+                    printf("power=[%.2f]\n", module.power);
 
-                    ESP_LOGI(TAG, "topic=[%s]\n", module.topic_energy);
-                    ESP_LOGI(TAG, "energy=[%.2f]\n", module.energy);
+                    printf("topic=[%s]\n", module.topic_energy);
+                    printf("energy=[%.2f]\n", module.energy);
 
                     char payload[50];
 
@@ -120,7 +120,7 @@ void mqtt_publish_module_task(void *pvParameters)
 
     }
 
-    ESP_LOGI(TAG, "Task Delete");
+    printf("Task Delete");
     esp_mqtt_client_stop(mqtt_client);
     vTaskDelete(NULL);
 }

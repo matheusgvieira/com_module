@@ -13,8 +13,6 @@
 
 const char* TAG = "STRBIOT";
 
-buttons button_reset_wifi = {.pin = 32, .state = 1};
-
 com_module module = { .read_uart = "",
                       .voltage = 0.0,
                       .current = 0.0,
@@ -47,7 +45,6 @@ wifi_credentials credentials = {.ssid = "", .password = ""};
 void app_main()
 {
     init_led(&led_main);
-    init_button(&button_reset_wifi);
 
     set_state_led(&led_main, 1);
 
@@ -107,6 +104,15 @@ void app_main()
                         2,
                         NULL
             );
+
+            xTaskCreate(reset_credentials_wifi_button,
+                        "reset_credentials_wifi_button",
+                        1024*4,
+                        NULL,
+                        2,
+                        NULL
+            );
+
         }
     }
 }

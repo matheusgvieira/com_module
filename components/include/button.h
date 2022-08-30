@@ -10,6 +10,7 @@
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "wifi.h"
 
 // Structure of sensor
 typedef struct {
@@ -19,5 +20,6 @@ typedef struct {
 
 void init_button(buttons *button);
 int8_t get_state(buttons *button);
+void reset_credentials_wifi_button(void *pvParameters);
 
 #endif //COM_MODULE_BUTTON_H

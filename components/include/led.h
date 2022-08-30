@@ -15,6 +15,7 @@ extern "C" {
 typedef struct {
 	gpio_num_t pin;
     char* color;
+    int time;
 } led_rgb;
 
 void init_led(led_rgb *led);
