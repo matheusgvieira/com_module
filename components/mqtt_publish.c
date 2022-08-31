@@ -24,37 +24,37 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     esp_mqtt_event_handle_t event = event_data;
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
-            printf("MQTT_EVENT_CONNECTED");
+            printf("MQTT_EVENT_CONNECTED\n");
             xEventGroupSetBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_DISCONNECTED:
-            printf("MQTT_EVENT_DISCONNECTED");
+            printf("MQTT_EVENT_DISCONNECTED\n");
             xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_SUBSCRIBED:
-            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
-            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_PUBLISHED:
-            printf("MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_PUBLISHED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_DATA:
-            printf("MQTT_EVENT_DATA");
+            printf("MQTT_EVENT_DATA\n");
             break;
         case MQTT_EVENT_ERROR:
-            printf("MQTT_EVENT_ERROR");
+            printf("MQTT_EVENT_ERROR\n");
             break;
         default:
-            printf("Other event id:%d", event->event_id);
+            printf("Other event id:%d\n", event->event_id);
             break;
     }
 }
 
 void mqtt_publish_module_task(void *pvParameters)
 {
-    printf("Start Publish Broker:%s", CONFIG_BROKER_URL);
+    printf("Start Publish Broker:%s\n", CONFIG_BROKER_URL);
 
     const esp_mqtt_client_config_t mqtt_cfg = {
             .broker.address.uri = CONFIG_BROKER_URL,

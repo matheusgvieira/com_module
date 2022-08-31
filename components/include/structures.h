@@ -20,10 +20,10 @@ extern "C" {
 typedef struct {
     char * read_uart;
 
-    float current;
-    float voltage;
-    float power;
-    float energy;
+    double current;
+    double voltage;
+    double power;
+    double energy;
 
    char * topic_current;
    char * topic_voltage;
@@ -47,6 +47,7 @@ typedef struct
 void get_init_nvs(com_module *data);
 void set_init_nvs(com_module *data);
 void split_tag_value(char *tag_value, split *tag_value_splited);
+void split_tag_module(com_module * module);
 
 #ifdef __cplusplus
 }

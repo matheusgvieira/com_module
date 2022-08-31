@@ -9,6 +9,27 @@ void split_tag_value(char *tag_value, split *tag_value_splited) {
     tag_value_splited->value = strtok(NULL, "-");
 }
 
+void split_tag_module(com_module * module) {
+    char * voltage_element = strtok(module->read_uart, "\n");
+    char * current_element = strtok(NULL, "\n");
+    char * power_element = strtok(NULL, "\n");
+    char * energy_element = strtok(NULL, "\n");
+
+    strtok(voltage_element, "-");
+    module->voltage = atof(strtok(NULL, "-"));
+
+    strtok(current_element, "-");
+    module->current = atof(strtok(NULL, "-"));
+
+    strtok(power_element, "-");
+    module->power = atof(strtok(NULL, "-"));
+
+    strtok(energy_element, "-");
+    module->energy = atof(strtok(NULL, "-"));
+
+    module -> update = 1;
+}
+
 void get_init_nvs(com_module *data) {
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {

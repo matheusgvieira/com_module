@@ -9,7 +9,7 @@ TaskHandle_t xHandle;
 static httpd_handle_t server = NULL;
 static EventGroupHandle_t wifi_event_group;
 
-led_rgb wifi_led = {.pin = 26, .color= "blue"};
+led_rgb wifi_led = {.pin = 26, .color= "blue", .time = 500};
 
 static int save_wifi_credentials(wifi_credentials *credentials) {
     esp_err_t err = nvs_flash_init();

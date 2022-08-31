@@ -16,47 +16,9 @@ extern QueueHandle_t module_queue;
 
 
 static void split_type_data(com_module *module) {
-    split tag_value_splited = {.tag = "", .value = ""};
-    float voltage = 0.0, current = 0.0, power = 0.0, energy = 0.0;
+    split_tag_module(module);
 
-    split_tag_value(module->read_uart, &tag_value_splited);
-
-    if(strcmp(tag_value_splited.tag, "V") == 0) {
-        voltage = atof(tag_value_splited.value);
-
-        if(module -> voltage != voltage) {
-            module -> voltage = voltage;
-            module -> update = 1;
-        }
-    }
-    if(strcmp(tag_value_splited.tag, "C") == 0) {
-        current = atof(tag_value_splited.value);
-
-        if(module -> current != current) {
-            module -> current = current;
-            module -> update = 1;
-        }
-    }
-
-    if(strcmp(tag_value_splited.tag, "P") == 0) {
-        power = atof(tag_value_splited.value);
-
-        if(module -> power != power) {
-            module -> power = power;
-            module -> update = 1;
-        }
-    }
-
-    if(strcmp(tag_value_splited.tag, "E") == 0) {
-        energy = atof(tag_value_splited.value);
-
-        if(module -> energy != energy) {
-            module -> energy = energy;
-            module -> update = 1;
-        }
-    }
-
-    ESP_LOGI("split_type_data", "current=[%.2f] | voltage=[%.2f] | power=[%.2f] | energy=[%.2f] | update=[%d] \n",
+    ESP_LOGI("split_type_data", "current=[%.4f] | voltage=[%.4f] | power=[%.4f] | energy=[%.4f] | update=[%d] \n",
              module -> current,
              module -> voltage,
              module -> power,
@@ -113,6 +75,8 @@ void read_byte_uart(void *pvParameters)
     esp_log_level_set(RX_TASK_TAG, ESP_LOG_INFO);
 
     uint8_t* bytes_received_rx = (uint8_t*) malloc(RX_BUF_SIZE);
+
+    printf("\nUART | initialization! \n");
 
     while(1) {
         const int len_bytes_received_rx = uart_read_bytes(

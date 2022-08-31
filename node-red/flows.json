@@ -304,7 +304,7 @@
         "type": "debug",
         "z": "c1f60fab791847d7",
         "name": "Tensão",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -312,7 +312,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 700,
+        "x": 720,
         "y": 500,
         "wires": []
     },
@@ -339,7 +339,7 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 690,
+        "x": 710,
         "y": 560,
         "wires": []
     },
@@ -363,7 +363,7 @@
         "type": "function",
         "z": "c1f60fab791847d7",
         "name": "round",
-        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "func": "msg.payload = (msg.payload * 0.880371167485416).toFixed(2);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -384,7 +384,7 @@
         "type": "function",
         "z": "c1f60fab791847d7",
         "name": "round",
-        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "func": "msg.payload = msg.payload.toFixed(4);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -497,7 +497,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 690,
+        "x": 710,
         "y": 600,
         "wires": [
             []
@@ -530,7 +530,7 @@
         "animate": false,
         "className": "",
         "x": 130,
-        "y": 1180,
+        "y": 1080,
         "wires": [
             [
                 "24dbd3e45258e347",
@@ -553,7 +553,7 @@
         "expiry": "",
         "broker": "4d1186fb1d1b8376",
         "x": 440,
-        "y": 1180,
+        "y": 1080,
         "wires": []
     },
     {
@@ -583,7 +583,7 @@
         "animate": false,
         "className": "",
         "x": 130,
-        "y": 1300,
+        "y": 1200,
         "wires": [
             [
                 "ec066ab0a57f29c1",
@@ -606,7 +606,7 @@
         "expiry": "",
         "broker": "4d1186fb1d1b8376",
         "x": 440,
-        "y": 1300,
+        "y": 1200,
         "wires": []
     },
     {
@@ -623,7 +623,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 430,
-        "y": 1140,
+        "y": 1040,
         "wires": []
     },
     {
@@ -640,7 +640,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 430,
-        "y": 1260,
+        "y": 1160,
         "wires": []
     },
     {
@@ -657,7 +657,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 140,
-        "y": 200,
+        "y": 180,
         "wires": [
             [
                 "eca1e14c53aa9109",
@@ -692,7 +692,7 @@
         "shape": "circle",
         "showGlow": true,
         "name": "",
-        "x": 350,
+        "x": 390,
         "y": 200,
         "wires": []
     },
@@ -709,7 +709,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 350,
+        "x": 390,
         "y": 160,
         "wires": []
     },
@@ -740,7 +740,7 @@
         "name": "Seccionamento",
         "info": "",
         "x": 160,
-        "y": 1080,
+        "y": 980,
         "wires": []
     },
     {
@@ -757,7 +757,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 140,
-        "y": 760,
+        "y": 720,
         "wires": [
             [
                 "72b5893d50a84146"
@@ -769,7 +769,7 @@
         "type": "debug",
         "z": "c1f60fab791847d7",
         "name": "Potencia",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -778,7 +778,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 720,
-        "y": 700,
+        "y": 660,
         "wires": []
     },
     {
@@ -805,7 +805,7 @@
         "seg2": "",
         "className": "",
         "x": 710,
-        "y": 760,
+        "y": 720,
         "wires": []
     },
     {
@@ -822,7 +822,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 140,
-        "y": 960,
+        "y": 880,
         "wires": [
             [
                 "517f4814509bb1d2"
@@ -834,7 +834,7 @@
         "type": "debug",
         "z": "c1f60fab791847d7",
         "name": "Energia",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -842,8 +842,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 700,
-        "y": 900,
+        "x": 720,
+        "y": 820,
         "wires": []
     },
     {
@@ -854,7 +854,7 @@
         "property": "payload",
         "name": "toFloat",
         "x": 320,
-        "y": 960,
+        "y": 880,
         "wires": [
             [
                 "e084cbd31d46f1fb"
@@ -866,18 +866,18 @@
         "type": "function",
         "z": "c1f60fab791847d7",
         "name": "round",
-        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "func": "msg.payload = msg.payload.toFixed(4);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 510,
-        "y": 960,
+        "y": 880,
         "wires": [
             [
                 "17b29ae47b03d4b5",
-                "be97c0b5fd2e74c7"
+                "1ca01d4f71194563"
             ]
         ]
     },
@@ -886,14 +886,14 @@
         "type": "function",
         "z": "c1f60fab791847d7",
         "name": "round",
-        "func": "msg.payload = msg.payload.toFixed(2);\nreturn msg;",
+        "func": "msg.payload = msg.payload.toFixed(4);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 550,
-        "y": 760,
+        "y": 720,
         "wires": [
             [
                 "4ae6c020e15b4b7c",
@@ -910,7 +910,7 @@
         "property": "payload",
         "name": "toFloat",
         "x": 360,
-        "y": 760,
+        "y": 720,
         "wires": [
             [
                 "bc28917e95fab6ad"
@@ -956,36 +956,27 @@
         "useDifferentColor": false,
         "className": "",
         "x": 710,
-        "y": 800,
+        "y": 760,
         "wires": [
             []
         ]
     },
     {
-        "id": "be97c0b5fd2e74c7",
-        "type": "ui_numeric",
+        "id": "1ca01d4f71194563",
+        "type": "ui_text",
         "z": "c1f60fab791847d7",
-        "name": "",
-        "label": "Energia",
-        "tooltip": "",
         "group": "b622c5bd0f36ee0a",
-        "order": 1,
+        "order": 2,
         "width": 0,
         "height": 0,
-        "wrap": false,
-        "passthru": true,
-        "topic": "topic",
-        "topicType": "msg",
+        "name": "",
+        "label": "Energia",
         "format": "{{value}} kWh",
-        "min": 0,
-        "max": 10,
-        "step": 1,
+        "layout": "row-spread",
         "className": "",
-        "x": 700,
-        "y": 960,
-        "wires": [
-            []
-        ]
+        "x": 720,
+        "y": 880,
+        "wires": []
     },
     {
         "id": "7e576cbd32ebed5e",

@@ -19,30 +19,30 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     esp_mqtt_event_handle_t event = event_data;
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
-            printf("MQTT_EVENT_CONNECTED");
+            printf("MQTT_EVENT_CONNECTED\n");
             xEventGroupSetBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_DISCONNECTED:
-            printf("MQTT_EVENT_DISCONNECTED");
+            printf("MQTT_EVENT_DISCONNECTED\n");
             xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_SUBSCRIBED:
-            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
-            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_PUBLISHED:
-            printf("MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_PUBLISHED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_DATA:
-            printf("MQTT_EVENT_DATA");
+            printf("MQTT_EVENT_DATA\n");
             break;
         case MQTT_EVENT_ERROR:
-            printf("MQTT_EVENT_ERROR");
+            printf("MQTT_EVENT_ERROR\n");
             break;
         default:
-            printf("Other event id:%d", event->event_id);
+            printf("Other event id:%d\n", event->event_id);
             break;
     }
 }
@@ -73,7 +73,7 @@ void mqtt_publish_state_task(void *pvParameters)
 
         EventBits_t EventBits = xEventGroupGetBits(s_mqtt_event_group);
 
-        printf("EventBits=%lx", EventBits);
+        printf("EventBits=%lx\n", EventBits);
 
         if (EventBits & MQTT_CONNECTED_BIT) {
             char payload[50];
@@ -88,7 +88,7 @@ void mqtt_publish_state_task(void *pvParameters)
         }
     }
 
-    printf("Task Delete");
+    printf("Task Delete\n");
     esp_mqtt_client_stop(mqtt_client);
     vTaskDelete(NULL);
 }

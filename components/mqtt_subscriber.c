@@ -32,22 +32,22 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     esp_mqtt_event_handle_t event = event_data;
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
-            printf("MQTT_EVENT_CONNECTED");
+            printf("MQTT_EVENT_CONNECTED\n");
             xEventGroupSetBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             //esp_mqtt_client_subscribe(mqtt_client, CONFIG_SUB_TOPIC, 0);
             break;
         case MQTT_EVENT_DISCONNECTED:
-            printf("MQTT_EVENT_DISCONNECTED");
+            printf("MQTT_EVENT_DISCONNECTED\n");
             xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_SUBSCRIBED:
-            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
-            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_UNSUBSCRIBED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_PUBLISHED:
-            printf("MQTT_EVENT_PUBLISHED, msg_id=%d", event->msg_id);
+            printf("MQTT_EVENT_PUBLISHED, msg_id=%d\n", event->msg_id);
             break;
         case MQTT_EVENT_DATA:
             printf("MQTT_EVENT_DATA");
@@ -117,6 +117,6 @@ void mqtt_subscriber_task(void *pvParameters)
     }
 
     // Never reach here
-    printf("Task Delete");
+    printf("Task Delete\n");
     vTaskDelete(NULL);
 }

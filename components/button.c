@@ -15,6 +15,7 @@ int8_t get_state(buttons *button){
 
 void reset_credentials_wifi_button(void *pvParameters) {
     init_button(&button_reset_wifi);
+    printf("\nBUTTON | initialization!!\n");
 
     while(1) {
         get_state(&button_reset_wifi);
@@ -22,5 +23,6 @@ void reset_credentials_wifi_button(void *pvParameters) {
             reset_wifi_credentials();
             printf("Button state => %d\n", button_reset_wifi.state);
         }
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
