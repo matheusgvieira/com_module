@@ -2,14 +2,13 @@
 
 static const char *TAG = "WIFI-STATION";
 
-static int s_retry_num = 0;
-const int CONNECTED_BIT = BIT0;
+int s_retry_num = 0;
+int CONNECTED_BIT = BIT0;
 
 TaskHandle_t xHandle;
-static httpd_handle_t server = NULL;
-static EventGroupHandle_t wifi_event_group;
-
-led_rgb wifi_led = {.pin = 26, .color= "blue", .time = 500};
+httpd_handle_t server = NULL;
+EventGroupHandle_t wifi_event_group;
+digital_output wifi_led = {.pin = 26, .tag= "blue", .time = 500};
 
 static int save_wifi_credentials(wifi_credentials *credentials) {
     esp_err_t err = nvs_flash_init();
@@ -291,7 +290,7 @@ static void wifi_event_sta_handler(void* arg, esp_event_base_t event_base,
 
 int8_t wifi_connect_sta(wifi_credentials *credentials) {
     // Init led
-    init_led(&wifi_led);
+    initialize_digital_output(&wifi_led);
 
     wifi_event_group = xEventGroupCreate();
 
@@ -337,12 +336,12 @@ int8_t wifi_connect_sta(wifi_credentials *credentials) {
     if (bits & WIFI_CONNECTED_BIT) {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
                  credentials->ssid, credentials->password);
-        set_state_led(&wifi_led, 1);
+        set_state_digital_output(&wifi_led, 1);
         return 1;
     } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
                  credentials->ssid, credentials->password);
-        set_state_led(&wifi_led, 0);
+        set_state_digital_output(&wifi_led, 0);
         return 0;
     } else {
         ESP_LOGE(TAG, "UNEXPECTED EVENT");
@@ -357,7 +356,7 @@ bool check_credentials(wifi_credentials *credentials) {
 
 void setup_wifi() {
 
-    init_led(&wifi_led);
+    initialize_digital_output(&wifi_led);
 
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -369,7 +368,7 @@ void setup_wifi() {
     ESP_LOGI(TAG, "ESP_WIFI_MODE_APSTA");
     wifi_ap();
 
-    xTaskCreate(toggle_led_task, "toggle_led_task", 1024*4, &wifi_led, 2, &xHandle);
+    xTaskCreate(toggle_digital_output_task, "toggle_led_task", 1024*4, &wifi_led, 2, &xHandle);
 
     server = start_webserver();
 

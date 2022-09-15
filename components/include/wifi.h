@@ -19,7 +19,7 @@
 #include "cJSON.h"
 #include "lwip/err.h"
 #include "lwip/sys.h"
-#include "led.h"
+#include "generic_digital_output.h"
 
 #ifdef __cplusplus
 extern "C" {

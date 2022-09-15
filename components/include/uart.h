@@ -25,10 +25,8 @@ extern "C" {
 
 // Functions
 void initialization_uart(void);
-void read_byte_uart(void *pvParameters);
-void writeByteUart(int8_t select_relay, int8_t value);
-//void echo_task(void *arg);
-
+void receive_message_uart(void *pvParameters);
+void send_message_uart(int8_t select_relay, int8_t value);
 
 #ifdef __cplusplus
 }

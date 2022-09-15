@@ -1,17 +1,19 @@
-#include <stdio.h>
-#include <string.h>
+#include "generic_digital_output.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_log.h"
-#include "mqtt.h"
-#include "structures.h"
-#include "uart.h"
-#include "led.h"
-#include "wifi.h"
-#include "button.h"
 #include "driver/gpio.h"
+#include "structures.h"
+#include "esp_log.h"
+#include "button.h"
+#include <string.h>
+#include <stdio.h>
+#include "mqtt.h"
+#include "uart.h"
+#include "wifi.h"
 
 const char* TAG = "STRBIOT";
+
+TaskHandle_t mqtt_task_handle;
 
 com_module module = { .read_uart = "",
                       .voltage = 0.0,
@@ -26,7 +28,7 @@ com_module module = { .read_uart = "",
                       .relay1 = 0,
                       .relay2 = 0};
 
-led_rgb led_main = {.pin = 25, .color= "white"};
+digital_output led_main = {.pin = 25, .tag= "white"};
 
 mqtt_message_t mqtt_message_state_module = {.topic = "tcc/state", .payload = 1.0, .tag = "current_state"};
 
@@ -44,9 +46,9 @@ wifi_credentials credentials = {.ssid = "", .password = ""};
 
 void app_main()
 {
-    init_led(&led_main);
+    initialize_digital_output(&led_main);
 
-    set_state_led(&led_main, 1);
+    set_state_digital_output(&led_main, 1);
 
     get_init_nvs(&module);
 
@@ -69,10 +71,10 @@ void app_main()
                         1024*4,
                         &mqtt_message_state_module,
                         2,
-                        NULL
+                        &mqtt_task_handle
             );
 
-            xTaskCreate(mqtt_subscriber_task,
+            xTaskCreate(mqtt_subscriber_relay_1_task,
                         "subscriber_rele1_state",
                         1024*4,
                         &mqtt_message_relay1,
@@ -80,7 +82,7 @@ void app_main()
                         NULL
             );
 
-            xTaskCreate(mqtt_subscriber_rele2_task,
+            xTaskCreate(mqtt_subscriber_relay_2_task,
                         "subscriber_rele2_state",
                         1024*4,
                         &mqtt_message_relay2,
@@ -89,7 +91,7 @@ void app_main()
             );
 
 
-            xTaskCreate(read_byte_uart,
+            xTaskCreate(receive_message_uart,
                         "read_byte_uart",
                         1024*4,
                         &module,
@@ -97,12 +99,12 @@ void app_main()
                         NULL
             );
 
-            xTaskCreate(mqtt_publish_module_task,
+            xTaskCreate(mqtt_publish_data_task,
                         "publish_values_got",
                         1024*4,
                         &module,
                         2,
-                        NULL
+                        &mqtt_task_handle
             );
 
             xTaskCreate(reset_credentials_wifi_button,

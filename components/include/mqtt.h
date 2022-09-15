@@ -9,7 +9,7 @@
 #include "wifi.h"
 #include "mqtt_client.h"
 #include "structures.h"
-#include "led.h"
+#include "generic_digital_output.h"
 #include "uart.h"
 
 #ifdef __cplusplus
@@ -19,7 +19,10 @@ extern "C" {
 // Defines
 #define TAG_MQTT "MQTT"
 #define CONFIG_BROKER_URL "mqtt://mqtt.tago.io:1883"
-#define MQTT_CONNECTED_BIT BIT0
+#define MQTT_CONNECTED_BIT  BIT0
+#define MQTT_DISCONNECTED   BIT1
+#define MQTT_CONNECTED      BIT2
+#define MQTT_PUBLISHED      BIT3
 
 // Structs
 typedef struct {
@@ -30,15 +33,14 @@ typedef struct {
     gpio_num_t pin_relay;
 } mqtt_message_t;
 
-
 // Variables
 
 // Functions
-void mqtt_init(void);
-void mqtt_subscriber_task(void *pvParameters);
-void mqtt_subscriber_rele2_task(void *pvParameters);
+esp_mqtt_client_config_t get_mqtt_cfg(void);
+void mqtt_subscriber_relay_1_task(void *pvParameters);
+void mqtt_subscriber_relay_2_task(void *pvParameters);
 void mqtt_publish_state_task(void *pvParameters);
-void mqtt_publish_module_task(void *pvParameters);
+void mqtt_publish_data_task(void *pvParameters);
 
 #ifdef __cplusplus
 }

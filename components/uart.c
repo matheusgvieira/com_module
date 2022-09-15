@@ -3,17 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-/*
- * Initialization of uart:
- *      - Install driver
- *      - Params of configuration
- *      - Setting pins
- * */
-
-// Queue
 extern QueueHandle_t module_queue;
-
 
 static void split_type_data(com_module *module) {
     split_tag_module(module);
@@ -28,7 +18,6 @@ static void split_type_data(com_module *module) {
 
 void initialization_uart(void)
 {
-    // UART configuration parameters for uart_param_config function.
     const uart_config_t uart_config = {
             .baud_rate = 115200,
             .data_bits = UART_DATA_8_BITS,
@@ -38,7 +27,6 @@ void initialization_uart(void)
             .source_clk = UART_SCLK_APB,
     };
 
-    // Install UART driver
     uart_driver_install(
             UART,
             RX_BUF_SIZE * 2,
@@ -48,13 +36,11 @@ void initialization_uart(void)
             0
             );
 
-    // Set UART configuration parameters.
     uart_param_config(
             UART,
             &uart_config
             );
 
-    // Set UART pins
     uart_set_pin(
             UART,
             TXD_PIN,
@@ -64,10 +50,7 @@ void initialization_uart(void)
             );
 }
 
-/*
- * Function for readbyte of UART
- */
-void read_byte_uart(void *pvParameters)
+void receive_message_uart(void *pvParameters)
 {
     com_module module = *(com_module *) pvParameters;
 
@@ -102,10 +85,7 @@ void read_byte_uart(void *pvParameters)
     free(bytes_received_rx);
 }
 
-/*
- * Function for send CMOK
- */
-void writeByteUart(int8_t select_relay, int8_t value)
+void send_message_uart(int8_t select_relay, int8_t value)
 {
     // Dynamically allocate a single large block of memory with the specified size of data sended uart
     char* bytes_sended_tx = (char*) malloc(100);
@@ -126,4 +106,3 @@ void writeByteUart(int8_t select_relay, int8_t value)
             strlen(bytes_sended_tx)
     );
 }
-
