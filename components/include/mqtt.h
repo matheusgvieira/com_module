@@ -18,11 +18,14 @@ extern "C" {
 
 // Defines
 #define TAG_MQTT "MQTT"
+
 #define CONFIG_BROKER_URL "mqtt://mqtt.tago.io:1883"
-#define MQTT_CONNECTED_BIT  BIT0
+
 #define MQTT_DISCONNECTED   BIT1
 #define MQTT_CONNECTED      BIT2
 #define MQTT_PUBLISHED      BIT3
+
+#define DEBUG_MODE      0
 
 // Structs
 typedef struct {
@@ -32,8 +35,6 @@ typedef struct {
     int8_t payload_received;
     gpio_num_t pin_relay;
 } mqtt_message_t;
-
-// Variables
 
 // Functions
 esp_mqtt_client_config_t get_mqtt_cfg(void);

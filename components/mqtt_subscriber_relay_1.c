@@ -12,7 +12,6 @@
 #include "mqtt.h"
 
 static QueueHandle_t xQueueSubscribe;
-static EventGroupHandle_t s_mqtt_event_group;
 
 digital_output relay_1;
 
@@ -22,12 +21,9 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
             printf("MQTT_EVENT_CONNECTED\n");
-            xEventGroupSetBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
-            //esp_mqtt_client_subscribe(mqtt_client, CONFIG_SUB_TOPIC, 0);
             break;
         case MQTT_EVENT_DISCONNECTED:
             printf("MQTT_EVENT_DISCONNECTED\n");
-            xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
             break;
         case MQTT_EVENT_SUBSCRIBED:
             printf("MQTT_EVENT_SUBSCRIBED, msg_id=%d\n", event->msg_id);
@@ -71,10 +67,6 @@ void mqtt_subscriber_relay_1_task(void *pvParameters)
     esp_mqtt_client_handle_t mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
     esp_mqtt_client_register_event(mqtt_client, ESP_EVENT_ANY_ID, mqtt_event_handler, mqtt_client);
     esp_mqtt_client_start(mqtt_client);
-
-    s_mqtt_event_group = xEventGroupCreate();
-    xEventGroupClearBits(s_mqtt_event_group, MQTT_CONNECTED_BIT);
-    xEventGroupWaitBits(s_mqtt_event_group, MQTT_CONNECTED_BIT, false, true, portMAX_DELAY);
 
     xQueueSubscribe = xQueueCreate( 10, sizeof(mqtt_message_t) );
 

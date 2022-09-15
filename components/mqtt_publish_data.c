@@ -9,9 +9,12 @@
 #include <string.h>
 #include <stdio.h>
 #include "mqtt.h"
+#include "button.h"
 
 static const char *TAG = "MQTT_PUBLISH_DATA";
 extern QueueHandle_t module_queue;
+
+buttons button_debug = {.state = 0, .pin = 19};
 
 void mqtt_publish_data_task(void *pvParameters)
 {
@@ -60,6 +63,11 @@ void mqtt_publish_data_task(void *pvParameters)
 
                     sprintf(payload, "%f", module.energy);
                     esp_mqtt_client_publish(mqtt_client, module.topic_energy, payload, strlen(payload), 0, 0);
+
+                    get_state(&button_debug);
+                    if (button_debug.state == 1) {
+                        esp_mqtt_client_publish(mqtt_client, module.topic_debug, module.read_uart, strlen(module.read_uart), 0, 0);
+                    }
 
                     set_init_nvs(&module);
                     module.update = 0;

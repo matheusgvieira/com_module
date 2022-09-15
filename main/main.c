@@ -24,6 +24,7 @@ com_module module = { .read_uart = "",
                       .topic_voltage = "tcc/voltage",
                       .topic_power = "tcc/power",
                       .topic_energy = "tcc/energy",
+                      .topic_debug = "tcc/debug",
                       .update = 0,
                       .relay1 = 0,
                       .relay2 = 0};

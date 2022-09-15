@@ -1,6 +1,6 @@
 #include "button.h"
 
-buttons button_reset_wifi = {.pin = 32, .state = 1};
+buttons button_reset_wifi = {.pin = 32, .state = 0};
 
 void init_button(buttons *button) {
     gpio_set_direction(button->pin, GPIO_MODE_INPUT);

@@ -4,11 +4,6 @@
 
 #include "structures.h"
 
-void split_tag_value(char *tag_value, split *tag_value_splited) {
-    tag_value_splited->tag = strtok(tag_value, "-");
-    tag_value_splited->value = strtok(NULL, "-");
-}
-
 void split_tag_module(com_module * module) {
     char * voltage_element = strtok(module->read_uart, "\n");
     char * current_element = strtok(NULL, "\n");

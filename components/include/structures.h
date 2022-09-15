@@ -29,6 +29,7 @@ typedef struct {
    char * topic_voltage;
    char * topic_power;
    char * topic_energy;
+   char * topic_debug;
 
     int8_t relay1;
     int8_t relay2;
@@ -37,16 +38,9 @@ typedef struct {
 
 } com_module;
 
-typedef struct
-{
-    char *tag;
-    char *value;
-} split;
-
 // Functions
-void get_init_nvs(com_module *data);
-void set_init_nvs(com_module *data);
-void split_tag_value(char *tag_value, split *tag_value_splited);
+void get_init_nvs(com_module * module);
+void set_init_nvs(com_module * module);
 void split_tag_module(com_module * module);
 
 #ifdef __cplusplus
