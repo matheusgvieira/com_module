@@ -365,7 +365,7 @@ void setup_wifi() {
     }
     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "ESP_WIFI_MODE_APSTA");
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_AP");
     wifi_ap();
 
     xTaskCreate(toggle_digital_output_task, "toggle_led_task", 1024*4, &wifi_led, 2, &xHandle);

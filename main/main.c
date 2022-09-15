@@ -1,12 +1,8 @@
 #include "generic_digital_output.h"
-#include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "driver/gpio.h"
 #include "structures.h"
 #include "esp_log.h"
 #include "button.h"
-#include <string.h>
-#include <stdio.h>
 #include "mqtt.h"
 #include "uart.h"
 #include "wifi.h"
