@@ -20,7 +20,7 @@ com_module module = { .read_uart = "",
                       .topic_voltage = "tcc/voltage",
                       .topic_power = "tcc/power",
                       .topic_energy = "tcc/energy",
-                      .topic_debug = "tcc/debug",
+                      .topic_debug = "/debug",
                       .update = 0,
                       .relay1 = 0,
                       .relay2 = 0};
@@ -29,9 +29,9 @@ digital_output led_main = {.pin = 25, .tag= "white"};
 
 mqtt_message_t mqtt_message_state_module = {.topic = "tcc/state", .payload = 1.0, .tag = "current_state"};
 
-mqtt_message_t mqtt_message_relay1 = {.topic = "tcc/rele1", .pin_relay = 33};
+mqtt_message_t mqtt_message_relay1 = {.topic = "tcc/relay_1", .pin_relay = 33};
 
-mqtt_message_t mqtt_message_relay2 = {.topic = "tcc/rele2", .pin_relay = 32};
+mqtt_message_t mqtt_message_relay2 = {.topic = "tcc/relay_2", .pin_relay = 32};
 
 static const int module_queue_len = 5;
 
